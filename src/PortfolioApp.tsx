@@ -232,9 +232,14 @@ const Experience = () => {
 
   const education = [
     {
-      institution: "Instituto Superior de Tecnologias",
-      degree: "Licenciatura em Engenharia Informática (Em curso)",
-      period: "2021 - Presente"
+      institution: "Instituto Politécnico da Huíla (IPH)",
+      degree: "Engenharia Informática",
+      period: "2016 - 2022"
+    },
+    {
+      institution: "Instituto Médio Politécnico da Humpata (IMPH)",
+      degree: "Técnico de Informática",
+      period: "2013 - 2015"
     }
   ];
 
