@@ -16,6 +16,7 @@ import {
   MessageCircle,
   ExternalLink,
   ChevronRight,
+  ChevronLeft,
   Download,
   MapPin,
   Calendar,
@@ -23,7 +24,7 @@ import {
   GraduationCap,
   Award
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 // --- Components ---
 
@@ -446,26 +447,32 @@ const Portfolio = () => {
     {
       title: "Infraestrutura de Rede LAN",
       category: "Redes & Conectividade",
-      image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop",
+      images: ["https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop"],
       desc: "Instalação e organização de cablagem estruturada e configuração de racks de servidores."
     },
     {
       title: "Monitorização CCTV IP",
       category: "Segurança Eletrónica",
-      image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=800&auto=format&fit=crop",
+      images: ["https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=800&auto=format&fit=crop"],
       desc: "Implementação de sistemas de vigilância com câmaras IP de alta resolução e acesso remoto."
     },
     {
       title: "Manutenção de Hardware",
       category: "Assistência Técnica",
-      image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop",
+      images: ["https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop"],
       desc: "Reparação de motherboards, upgrades de componentes e limpeza técnica de equipamentos."
     },
     {
       title: "Identidade Visual Corporativa",
       category: "Design Gráfico",
-      image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=800&auto=format&fit=crop",
-      desc: "Criação de logótipos, manuais de marca e materiais de comunicação visual para empresas."
+      images: [
+        "https://drive.google.com/file/d/1SVdi5oyMr5VYI3i3hYlcfML2FcfYLd_L/view?usp=sharing",
+        "https://drive.google.com/file/d/1EGmftSoRalEQ16clA9VMkAkawZ8M_4Xp/view?usp=sharing",
+        "https://drive.google.com/file/d/1jOsHsL2V6AjoCbZMqWwHSnUvCZC3ywfj/view?usp=sharing",
+        "https://drive.google.com/file/d/1uS-xmfXsORT3I4DbI9SI_8P3alJ02xNN/view?usp=drive_link"
+      ],
+      desc: "Criação de logótipos, manuais de marca e materiais de comunicação visual para empresas.",
+      driveFolder: "https://drive.google.com/drive/folders/1gzxbCn3fE_p5ACmqv-h5OCG2iYDb9JiP?usp=sharing"
     }
   ];
 
@@ -474,30 +481,84 @@ const Portfolio = () => {
       <h2 className="section-heading"><span className="text-green font-mono text-xl mr-2">05.</span> Alguns Projetos</h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project, i) => (
-          <motion.div 
-            key={i}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="group relative overflow-hidden rounded-lg bg-navy-light flex flex-col h-full"
-          >
-            <div className="aspect-square overflow-hidden">
-              <img 
-                src={getDriveImageUrl(project.image)} 
-                alt={project.title} 
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <div className="p-6 flex-grow">
-              <span className="text-green font-mono text-xs mb-2 block">{project.category}</span>
-              <h3 className="text-xl mb-2 group-hover:text-green transition-colors">{project.title}</h3>
-              <p className="text-slate text-sm">{project.desc}</p>
-            </div>
-          </motion.div>
+          <ProjectCard key={i} project={project} index={i} />
         ))}
       </div>
     </section>
+  );
+};
+
+const ProjectCard = ({ project, index }: any) => {
+  const [currentImage, setCurrentImage] = useState(0);
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImage((prev) => (prev + 1) % project.images.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImage((prev) => (prev - 1 + project.images.length) % project.images.length);
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      className="group relative overflow-hidden rounded-lg bg-navy-light flex flex-col h-full"
+    >
+      <div className="aspect-square overflow-hidden relative">
+        <img 
+          src={getDriveImageUrl(project.images[currentImage])} 
+          alt={project.title} 
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100"
+          referrerPolicy="no-referrer"
+        />
+        
+        {project.images.length > 1 && (
+          <>
+            <button 
+              onClick={prevImage}
+              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-navy/80 text-green rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-navy"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button 
+              onClick={nextImage}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-navy/80 text-green rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-navy"
+            >
+              <ChevronRight size={20} />
+            </button>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+              {project.images.map((_: any, i: number) => (
+                <div 
+                  key={i} 
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentImage ? "bg-green w-4" : "bg-white/30"}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+      <div className="p-6 flex-grow flex flex-col">
+        <span className="text-green font-mono text-xs mb-2 block">{project.category}</span>
+        <h3 className="text-xl mb-2 group-hover:text-green transition-colors">{project.title}</h3>
+        <p className="text-slate text-sm mb-6 flex-grow">{project.desc}</p>
+        
+        {project.driveFolder && (
+          <a 
+            href={project.driveFolder} 
+            target="_blank" 
+            rel="noreferrer" 
+            className="text-green font-mono text-xs flex items-center gap-2 hover:underline mt-auto"
+          >
+            <ExternalLink size={14} /> Ver Pasta Completa no Drive
+          </a>
+        )}
+      </div>
+    </motion.div>
   );
 };
 
