@@ -27,6 +27,16 @@ import { useState, useEffect } from "react";
 
 // --- Components ---
 
+// --- Helper Functions ---
+const getDriveImageUrl = (url: string) => {
+  if (!url.includes("drive.google.com")) return url;
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return `https://lh3.googleusercontent.com/u/0/d/${match[1]}`;
+  }
+  return url;
+};
+
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
 
@@ -146,8 +156,8 @@ const Hero = () => {
         <div className="absolute -inset-4 border-2 border-green rounded translate-x-4 translate-y-4"></div>
         <div className="relative aspect-[4/5] bg-navy-lightest rounded overflow-hidden shadow-2xl">
           <img 
-            src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop" 
-            alt="Infraestrutura de Redes" 
+            src={getDriveImageUrl("https://drive.google.com/file/d/1jv7HMLwlLgbGJl_cvficJuJHG-AHATO9/view?usp=sharing")} 
+            alt="Jaime de Paulo" 
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />
@@ -202,8 +212,8 @@ const About = () => {
           <div className="absolute -inset-4 border-2 border-green rounded translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-300"></div>
           <div className="relative aspect-square bg-navy-lightest rounded overflow-hidden">
             <img 
-              src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=800&auto=format&fit=crop" 
-              alt="Especialista em Redes" 
+              src={getDriveImageUrl("https://drive.google.com/file/d/1x1OWN7c1EwmZQqOsWizilnjEMHP82_Kj/view?usp=sharing")} 
+              alt="Jaime de Paulo" 
               className="w-full h-full object-cover transition-all duration-500"
               referrerPolicy="no-referrer"
             />
@@ -473,7 +483,7 @@ const Portfolio = () => {
           >
             <div className="aspect-square overflow-hidden">
               <img 
-                src={project.image} 
+                src={getDriveImageUrl(project.image)} 
                 alt={project.title} 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100"
                 referrerPolicy="no-referrer"
