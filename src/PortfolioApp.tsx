@@ -20,7 +20,8 @@ import {
   MapPin,
   Calendar,
   Briefcase,
-  GraduationCap
+  GraduationCap,
+  Award
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -38,6 +39,7 @@ const Navbar = () => {
   const navItems = [
     { name: "Sobre", href: "#about" },
     { name: "Experiência", href: "#experience" },
+    { name: "Formação", href: "#training" },
     { name: "Serviços", href: "#services" },
     { name: "Portfólio", href: "#portfolio" },
     { name: "Contacto", href: "#contact" },
@@ -86,51 +88,71 @@ const Navbar = () => {
 
 const Hero = () => {
   return (
-    <section className="min-h-screen flex flex-col justify-center container mx-auto px-6 pt-20">
-      <motion.p 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="text-green font-mono mb-5"
-      >
-        Olá, o meu nome é
-      </motion.p>
-      <motion.h1 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="text-5xl md:text-7xl text-slate-lightest mb-4"
-      >
-        Jaime de Paulo.
-      </motion.h1>
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="text-4xl md:text-6xl text-slate mb-6 leading-tight"
-      >
-        Soluções Inteligentes em TI para o seu Negócio.
-      </motion.h2>
-      <motion.p 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="max-w-xl text-lg mb-12"
-      >
-        Sou um Técnico de Informática multifuncional especializado em suporte técnico, 
-        redes, sistemas CCTV e segurança da informação. Focado em resolver problemas 
-        complexos com eficiência e profissionalismo.
-      </motion.p>
+    <section className="min-h-screen flex flex-col lg:flex-row items-center justify-center container mx-auto px-6 pt-20 gap-12">
+      <div className="flex-1">
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-green font-mono mb-5"
+        >
+          Olá, o meu nome é
+        </motion.p>
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-5xl md:text-7xl text-slate-lightest mb-4"
+        >
+          Jaime de Paulo.
+        </motion.h1>
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="text-4xl md:text-6xl text-slate mb-6 leading-tight"
+        >
+          Soluções Inteligentes em TI para o seu Negócio.
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="max-w-xl text-lg mb-12"
+        >
+          Sou um Técnico de Informática multifuncional especializado em suporte técnico, 
+          redes, sistemas CCTV e segurança da informação. Focado em resolver problemas 
+          complexos com eficiência e profissionalismo.
+        </motion.p>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="flex flex-wrap gap-4"
+        >
+          <a href="https://wa.me/244939785068" target="_blank" rel="noreferrer" className="btn-filled flex items-center gap-2">
+            <MessageCircle size={18} /> Fale Comigo no WhatsApp
+          </a>
+          <a href="#portfolio" className="btn-primary">Ver Meus Projetos</a>
+        </motion.div>
+      </div>
+      
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="flex flex-wrap gap-4"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.6 }}
+        className="flex-1 hidden lg:block relative max-w-md"
       >
-        <a href="https://wa.me/244939785068" target="_blank" rel="noreferrer" className="btn-filled flex items-center gap-2">
-          <MessageCircle size={18} /> Fale Comigo no WhatsApp
-        </a>
-        <a href="#portfolio" className="btn-primary">Ver Meus Projetos</a>
+        <div className="absolute -inset-4 border-2 border-green rounded translate-x-4 translate-y-4"></div>
+        <div className="relative aspect-[4/5] bg-navy-lightest rounded overflow-hidden shadow-2xl">
+          <img 
+            src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop" 
+            alt="Infraestrutura de Redes" 
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-green/10"></div>
+        </div>
       </motion.div>
     </section>
   );
@@ -180,12 +202,12 @@ const About = () => {
           <div className="absolute -inset-4 border-2 border-green rounded translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-300"></div>
           <div className="relative aspect-square bg-navy-lightest rounded overflow-hidden">
             <img 
-              src="https://picsum.photos/seed/tech-pro/600/600" 
-              alt="Jaime de Paulo" 
-              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+              src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=800&auto=format&fit=crop" 
+              alt="Especialista em Redes" 
+              className="w-full h-full object-cover transition-all duration-500"
               referrerPolicy="no-referrer"
             />
-            <div className="absolute inset-0 bg-green/20 group-hover:bg-transparent transition-colors duration-300"></div>
+            <div className="absolute inset-0 bg-green/10 group-hover:bg-transparent transition-colors duration-300"></div>
           </div>
         </div>
       </div>
@@ -301,6 +323,51 @@ const Experience = () => {
   );
 };
 
+const ProfessionalTraining = () => {
+  const courses = [
+    { title: "Designer Gráfico", year: "2019", institution: "Befamily Center" },
+    { title: "Gestão de Recursos Humanos", year: "2020", institution: "FREMUQUE" },
+    { title: "Secretariado e Práticas Administrativas", year: "2023", institution: "ATS" },
+    { title: "Excel Express", year: "2025", institution: "Simplifica Treinamentos" },
+    { title: "Empreendedorismo", year: "2025", institution: "Cursa" },
+    { title: "Segurança no Trabalho", year: "2025", institution: "Educape TV" },
+    { title: "Marketing Multinível", year: "2025", institution: "Qualificare" }
+  ];
+
+  return (
+    <section id="training" className="py-24 bg-navy-light/20">
+      <div className="container mx-auto px-6">
+        <h2 className="section-heading">
+          <span className="text-green font-mono text-xl mr-2">03.</span> Formação Profissional
+        </h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {courses.map((course, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="glass-card flex flex-col justify-between h-full"
+            >
+              <div>
+                <div className="flex items-center gap-2 text-green mb-3">
+                  <Award size={18} />
+                  <span className="font-mono text-xs">{course.year}</span>
+                </div>
+                <h3 className="text-lg text-slate-lightest mb-2">{course.title}</h3>
+              </div>
+              <p className="text-slate text-sm flex items-center gap-2 mt-4">
+                <GraduationCap size={14} className="text-green" /> {course.institution}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const Services = () => {
   const services = [
     {
@@ -338,7 +405,7 @@ const Services = () => {
   return (
     <section id="services" className="py-24 bg-navy-light/30">
       <div className="container mx-auto px-6">
-        <h2 className="section-heading"><span className="text-green font-mono text-xl mr-2">03.</span> Serviços Profissionais</h2>
+        <h2 className="section-heading"><span className="text-green font-mono text-xl mr-2">04.</span> Serviços Profissionais</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, i) => (
             <motion.div 
@@ -394,7 +461,7 @@ const Portfolio = () => {
 
   return (
     <section id="portfolio" className="py-24 container mx-auto px-6">
-      <h2 className="section-heading"><span className="text-green font-mono text-xl mr-2">04.</span> Alguns Projetos</h2>
+      <h2 className="section-heading"><span className="text-green font-mono text-xl mr-2">05.</span> Alguns Projetos</h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project, i) => (
           <motion.div 
@@ -432,7 +499,7 @@ const Contact = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
       >
-        <span className="text-green font-mono text-sm mb-4 block">05. Qual é o próximo passo?</span>
+        <span className="text-green font-mono text-sm mb-4 block">06. Qual é o próximo passo?</span>
         <h2 className="text-4xl md:text-5xl text-slate-lightest mb-6">Entre em Contacto</h2>
         <p className="text-lg mb-12 text-slate">
           Estou atualmente disponível para novos projetos e oportunidades. 
@@ -514,6 +581,7 @@ export default function PortfolioApp() {
         <Hero />
         <About />
         <Experience />
+        <ProfessionalTraining />
         <Services />
         <Portfolio />
         <Contact />
