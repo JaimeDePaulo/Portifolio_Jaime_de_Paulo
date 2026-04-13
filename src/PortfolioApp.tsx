@@ -16,6 +16,7 @@ import {
   MessageCircle,
   ExternalLink,
   Youtube,
+  Play,
   ChevronRight,
   ChevronLeft,
   ArrowLeft,
@@ -502,15 +503,24 @@ const Portfolio = ({ onDesignClick }: { onDesignClick: () => void }) => {
 
 const ProjectCard = ({ project, index, onClick }: any) => {
   const [currentImage, setCurrentImage] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const getYoutubeId = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  const videoId = project.youtubeLink ? getYoutubeId(project.youtubeLink) : null;
 
   useEffect(() => {
-    if (project.autoPlay && project.images.length > 1) {
+    if (project.autoPlay && project.images.length > 1 && !isPlaying) {
       const timer = setInterval(() => {
         setCurrentImage((prev) => (prev + 1) % project.images.length);
       }, 3000);
       return () => clearInterval(timer);
     }
-  }, [project.autoPlay, project.images.length]);
+  }, [project.autoPlay, project.images.length, isPlaying]);
 
   const nextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -522,6 +532,11 @@ const ProjectCard = ({ project, index, onClick }: any) => {
     setCurrentImage((prev) => (prev - 1 + project.images.length) % project.images.length);
   };
 
+  const handlePlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsPlaying(true);
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
@@ -531,36 +546,59 @@ const ProjectCard = ({ project, index, onClick }: any) => {
       onClick={onClick}
       className={`group relative overflow-hidden rounded-lg bg-navy-light flex flex-col h-full ${onClick ? "cursor-pointer" : ""}`}
     >
-      <div className="aspect-square overflow-hidden relative">
-        <img 
-          src={getDriveImageUrl(project.images[currentImage])} 
-          alt={project.title} 
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100"
-          referrerPolicy="no-referrer"
-        />
-        
-        {project.images.length > 1 && (
+      <div className="aspect-square overflow-hidden relative bg-navy-dark">
+        {isPlaying && videoId ? (
+          <iframe
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+            title={project.title}
+            className="w-full h-full absolute inset-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        ) : (
           <>
-            <button 
-              onClick={prevImage}
-              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-navy/80 text-green rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-navy"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button 
-              onClick={nextImage}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-navy/80 text-green rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-navy"
-            >
-              <ChevronRight size={20} />
-            </button>
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-              {project.images.map((_: any, i: number) => (
-                <div 
-                  key={i} 
-                  className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentImage ? "bg-green w-4" : "bg-white/30"}`}
-                />
-              ))}
-            </div>
+            <img 
+              src={getDriveImageUrl(project.images[currentImage])} 
+              alt={project.title} 
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100"
+              referrerPolicy="no-referrer"
+            />
+            
+            {project.youtubeLink && (
+              <button 
+                onClick={handlePlay}
+                className="absolute inset-0 flex items-center justify-center bg-navy/20 group-hover:bg-navy/40 transition-colors z-20"
+              >
+                <div className="w-16 h-16 bg-green/90 text-navy rounded-full flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform">
+                  <Play size={32} fill="currentColor" className="ml-1" />
+                </div>
+              </button>
+            )}
+
+            {project.images.length > 1 && (
+              <>
+                <button 
+                  onClick={prevImage}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-navy/80 text-green rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-navy"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <button 
+                  onClick={nextImage}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-navy/80 text-green rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-10 hover:bg-navy"
+                >
+                  <ChevronRight size={20} />
+                </button>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                  {project.images.map((_: any, i: number) => (
+                    <div 
+                      key={i} 
+                      className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentImage ? "bg-green w-4" : "bg-white/30"}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </>
         )}
       </div>
@@ -570,14 +608,25 @@ const ProjectCard = ({ project, index, onClick }: any) => {
         <p className="text-slate text-sm mb-6 flex-grow">{project.desc}</p>
         
         {project.youtubeLink && (
-          <a 
-            href={project.youtubeLink} 
-            target="_blank" 
-            rel="noreferrer" 
-            className="text-green font-mono text-xs flex items-center gap-2 hover:underline mt-auto"
-          >
-            <Youtube size={14} /> Ver Vídeo no YouTube
-          </a>
+          <div className="flex flex-col gap-3 mt-auto">
+            {isPlaying && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setIsPlaying(false); }}
+                className="text-slate font-mono text-xs flex items-center gap-2 hover:text-green transition-colors"
+              >
+                <ArrowLeft size={14} /> Fechar Player
+              </button>
+            )}
+            <a 
+              href={project.youtubeLink} 
+              target="_blank" 
+              rel="noreferrer" 
+              className="text-green font-mono text-xs flex items-center gap-2 hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Youtube size={14} /> Ver no YouTube
+            </a>
+          </div>
         )}
       </div>
     </motion.div>
