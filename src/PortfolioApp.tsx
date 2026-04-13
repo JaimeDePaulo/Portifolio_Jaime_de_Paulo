@@ -15,8 +15,10 @@ import {
   Phone,
   MessageCircle,
   ExternalLink,
+  Youtube,
   ChevronRight,
   ChevronLeft,
+  ArrowLeft,
   Download,
   MapPin,
   Calendar,
@@ -442,7 +444,7 @@ const Services = () => {
   );
 };
 
-const Portfolio = () => {
+const Portfolio = ({ onDesignClick }: { onDesignClick: () => void }) => {
   const projects = [
     {
       title: "Infraestrutura de Rede LAN",
@@ -463,16 +465,21 @@ const Portfolio = () => {
       desc: "Reparação de motherboards, upgrades de componentes e limpeza técnica de equipamentos."
     },
     {
-      title: "Identidade Visual Corporativa",
-      category: "Design Gráfico",
+      title: "Design Gráfico Profissional",
+      category: "Design & Branding",
       images: [
         "https://drive.google.com/file/d/1SVdi5oyMr5VYI3i3hYlcfML2FcfYLd_L/view?usp=sharing",
-        "https://drive.google.com/file/d/1EGmftSoRalEQ16clA9VMkAkawZ8M_4Xp/view?usp=sharing",
-        "https://drive.google.com/file/d/1jOsHsL2V6AjoCbZMqWwHSnUvCZC3ywfj/view?usp=sharing",
-        "https://drive.google.com/file/d/1uS-xmfXsORT3I4DbI9SI_8P3alJ02xNN/view?usp=drive_link"
+        "https://drive.google.com/file/d/1EGmftSoRalEQ16clA9VMkAkawZ8M_4Xp/view?usp=sharing"
       ],
-      desc: "Criação de logótipos, manuais de marca e materiais de comunicação visual para empresas.",
-      driveFolder: "https://drive.google.com/drive/folders/1gzxbCn3fE_p5ACmqv-h5OCG2iYDb9JiP?usp=sharing"
+      desc: "Criação de flyers, logótipos e identidades visuais completas para empresas e instituições.",
+      isDesignLink: true
+    },
+    {
+      title: "Educação Decolonial & Literatura",
+      category: "Educação & Cultura",
+      images: ["https://img.youtube.com/vi/WMsFCeVWYH0/maxresdefault.jpg"],
+      desc: "Brasil e Angola: um olhar reflexivo para a educação decolonial por meio da literatura afro-brasileira e angolana.",
+      youtubeLink: "https://www.youtube.com/watch?v=WMsFCeVWYH0"
     }
   ];
 
@@ -481,15 +488,29 @@ const Portfolio = () => {
       <h2 className="section-heading"><span className="text-green font-mono text-xl mr-2">05.</span> Alguns Projetos</h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {projects.map((project, i) => (
-          <ProjectCard key={i} project={project} index={i} />
+          <ProjectCard 
+            key={i} 
+            project={project} 
+            index={i} 
+            onClick={project.isDesignLink ? onDesignClick : undefined} 
+          />
         ))}
       </div>
     </section>
   );
 };
 
-const ProjectCard = ({ project, index }: any) => {
+const ProjectCard = ({ project, index, onClick }: any) => {
   const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    if (project.autoPlay && project.images.length > 1) {
+      const timer = setInterval(() => {
+        setCurrentImage((prev) => (prev + 1) % project.images.length);
+      }, 3000);
+      return () => clearInterval(timer);
+    }
+  }, [project.autoPlay, project.images.length]);
 
   const nextImage = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -507,7 +528,8 @@ const ProjectCard = ({ project, index }: any) => {
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
-      className="group relative overflow-hidden rounded-lg bg-navy-light flex flex-col h-full"
+      onClick={onClick}
+      className={`group relative overflow-hidden rounded-lg bg-navy-light flex flex-col h-full ${onClick ? "cursor-pointer" : ""}`}
     >
       <div className="aspect-square overflow-hidden relative">
         <img 
@@ -547,14 +569,14 @@ const ProjectCard = ({ project, index }: any) => {
         <h3 className="text-xl mb-2 group-hover:text-green transition-colors">{project.title}</h3>
         <p className="text-slate text-sm mb-6 flex-grow">{project.desc}</p>
         
-        {project.driveFolder && (
+        {project.youtubeLink && (
           <a 
-            href={project.driveFolder} 
+            href={project.youtubeLink} 
             target="_blank" 
             rel="noreferrer" 
             className="text-green font-mono text-xs flex items-center gap-2 hover:underline mt-auto"
           >
-            <ExternalLink size={14} /> Ver Pasta Completa no Drive
+            <Youtube size={14} /> Ver Vídeo no YouTube
           </a>
         )}
       </div>
@@ -605,6 +627,143 @@ const Contact = () => {
   );
 };
 
+const GraphicDesignPage = ({ onBack }: { onBack: () => void }) => {
+  const designProjects = [
+    {
+      title: "Flyers & Cartazes",
+      category: "Design Gráfico",
+      images: [
+        "https://drive.google.com/file/d/1raqhQ8Py6hNZf43v6dFyUEPwVP9ccaRu/view?usp=drive_link",
+        "https://drive.google.com/file/d/15r2-BpHCcX1ywr5xaJsrzsEOS2n6Jc1t/view?usp=drive_link",
+        "https://drive.google.com/file/d/1tiqDCH1XvcALsEDWm6kG0VDrw8x8oLtF/view?usp=drive_link",
+        "https://drive.google.com/file/d/1ayaIU3R8sdCZiIc5KEFuKSBy-IPRZtDI/view?usp=drive_link",
+        "https://drive.google.com/file/d/1wPxkNXCDCnWEd5DUlpcA34pLJ-LSMtgj/view?usp=drive_link",
+        "https://drive.google.com/file/d/1KtgWdyOCo89Z2HTYirZlWSLc1iFQphlu/view?usp=drive_link",
+        "https://drive.google.com/file/d/1Jgr72vt-BsVsiJ1rmLMzJQ4z66uid0zq/view?usp=drive_link",
+        "https://drive.google.com/file/d/1LAgR4lGD7PaPAgSPRn3wHQj244pm49pR/view?usp=drive_link",
+        "https://drive.google.com/file/d/1td4gcwW3mPKmTkshzT9gBUj6ZzCV0njg/view?usp=drive_link",
+        "https://drive.google.com/file/d/17BNyRvQbpXm697SiQ23sGAqA3xA1d_l0/view?usp=drive_link",
+        "https://drive.google.com/file/d/1Av-_9x-4ht2hoe8KqvFh_4BcfLcu8PKG/view?usp=drive_link",
+        "https://drive.google.com/file/d/1GPccmiqPxirgRXeGPtoIM7G2T7LOxt1M/view?usp=drive_link",
+        "https://drive.google.com/file/d/1NLK30NKmEO6NYYvs2trfpTB4Efr0Lf2O/view?usp=drive_link",
+        "https://drive.google.com/file/d/1Jnx1LO9O_og5FC7tBDOAd-vPGeBOXCXJ/view?usp=drive_link",
+        "https://drive.google.com/file/d/1eWcuWGlmPCk5oJeDTZ_fRcGZRiiUJZ61/view?usp=drive_link",
+        "https://drive.google.com/file/d/1n0t97OK_cy_aRVpB5VYx4nHgGX1f6HxR/view?usp=drive_link",
+        "https://drive.google.com/file/d/17rOshHAbuNVZFPItcjuVYpxHhWOdJ_hg/view?usp=drive_link",
+        "https://drive.google.com/file/d/1fNUZVfiro7bch_17mBTTJvv-UqiXri0N/view?usp=drive_link",
+        "https://drive.google.com/file/d/1JzwYJVUPc2V0V6aIvQqJ80PVPVebN-Id/view?usp=drive_link",
+        "https://drive.google.com/file/d/1jkD7XpxCXhT29bG_rH3Jr3PT4pvdnl03/view?usp=drive_link",
+        "https://drive.google.com/file/d/1apyVi1vANXTxUDNX0FTSYaIBH8F0xcCp/view?usp=drive_link",
+        "https://drive.google.com/file/d/1PgBA_nvIhGS_vQUj1kiqbo_5V8QNP4ad/view?usp=drive_link",
+        "https://drive.google.com/file/d/1vSKIUMcNfZiGP_vPnNhrhAGPUKtP9syX/view?usp=drive_link",
+        "https://drive.google.com/file/d/1LLEH4LCWKSPND_IueQxQfoE9TFBQqPT8/view?usp=drive_link",
+        "https://drive.google.com/file/d/103Sgg0wnhh0_Ccq9wMb9dGuyMmV2H0lN/view?usp=drive_link",
+        "https://drive.google.com/file/d/1GLgUpYsTNWWSuz-uaBPR6eIi-EJ38Pqy/view?usp=drive_link",
+        "https://drive.google.com/file/d/1iCdviHSssR7AzPwaP4jhTTEzdE1lYHyD/view?usp=drive_link",
+        "https://drive.google.com/file/d/1yO4_NQListTDXkSUjp4JrWOCKMZcFrHs/view?usp=drive_link",
+        "https://drive.google.com/file/d/1m4lAHQukZALCabNYYF2hOwcwXXVFRspM/view?usp=drive_link",
+        "https://drive.google.com/file/d/1p7rSvdkgmyOTRdMGQsjfnRlLTEUEh9XN/view?usp=drive_link",
+        "https://drive.google.com/file/d/1zVkkp53_HpNYMoUAR5VSHZ72o6FOsUvh/view?usp=drive_link",
+        "https://drive.google.com/file/d/12nMW7WydIF79b8x8FEnqQYEMejfM7OR4/view?usp=drive_link",
+        "https://drive.google.com/file/d/1xiu1MxKybKZad3qWXp6w0uzWboyp6chn/view?usp=drive_link",
+        "https://drive.google.com/file/d/1PMwmXBF1SaY6Ei_0ej3lBebmE40xtOVP/view?usp=drive_link",
+        "https://drive.google.com/file/d/1jORCryan4RA8LjWXmbrubBCxbNp8qyZr/view?usp=drive_link",
+        "https://drive.google.com/file/d/1ebwR-IfolTJPCSWLl4T9fmYikBWP9qqj/view?usp=drive_link",
+        "https://drive.google.com/file/d/1G9flJ8iCgLoHNvmwABwxxuoJE7LvByQi/view?usp=drive_link"
+      ],
+      desc: "Criação de flyers promocionais, cartazes para eventos e materiais publicitários de alto impacto.",
+      driveFolder: "https://drive.google.com/drive/folders/17NHZV2-kACCfpjHivcwxnPYQXsjmCa3z?usp=sharing",
+      autoPlay: true
+    },
+    {
+      title: "Design para Igreja",
+      category: "Design Religioso",
+      images: [
+        "https://drive.google.com/file/d/1L_-q_lNPYnljYm8bajPRfVkbHBr-qMJC/view?usp=drive_link",
+        "https://drive.google.com/file/d/1BR_1e__IUge2dN_ozqTWmxErq9nbBodb/view?usp=drive_link",
+        "https://drive.google.com/file/d/1ZuvZbLXl8l_U-FRHae1eZkJZaY3Mkt51/view?usp=drive_link",
+        "https://drive.google.com/file/d/1gnpITMKwOA4xXyhepQolgpHKW81XETY3/view?usp=drive_link",
+        "https://drive.google.com/file/d/1ThJOs_j-sUo_YzYNpEtEVgwxtdRP-1FZ/view?usp=drive_link",
+        "https://drive.google.com/file/d/1X575gCOE6thwOdqVyi2swIfqHmeHsgjT/view?usp=drive_link",
+        "https://drive.google.com/file/d/19I5wbVYxh4gemHFaNuzjxeFLfPFTB4FS/view?usp=drive_link",
+        "https://drive.google.com/file/d/13Y84C3Fs6l7ZiN2uu1Rx8TysXLS-iv2F/view?usp=drive_link"
+      ],
+      desc: "Materiais visuais para ministérios, eventos religiosos, redes sociais e comunicação eclesiástica.",
+      driveFolder: "https://drive.google.com/drive/folders/12_AEmYUpk_jMjHsVyPRiOhTZ14i8carj?usp=drive_link",
+      autoPlay: true
+    },
+    {
+      title: "Logotipos e ID Visual",
+      category: "Branding",
+      images: [
+        "https://drive.google.com/file/d/19L8iHJZ_wqkzNdoVd04U3ZwF-bfMcQWJ/view?usp=drive_link",
+        "https://drive.google.com/file/d/19McmL9KuFJ_jMfHvVrq1Bvdm4ZXa3K2L/view?usp=drive_link",
+        "https://drive.google.com/file/d/1HxQ-2geQj98qQIiS--Ax8U4b-tj1mUHS/view?usp=drive_link",
+        "https://drive.google.com/file/d/1WGOZQjFkx3M538tiKI5wPBEyj9rJHBOh/view?usp=drive_link",
+        "https://drive.google.com/file/d/1fr3rYpkhWLZPD-o8aPSH-bThPa2va2mY/view?usp=drive_link",
+        "https://drive.google.com/file/d/1nHzfVrDFPK6OsfDMhDe64-hGbyx3cWVU/view?usp=drive_link",
+        "https://drive.google.com/file/d/1cmRVNAtSi6TKXR-asSHcl6J_2Vjd7I_Q/view?usp=drive_link",
+        "https://drive.google.com/file/d/1cooeALl8u9STY4SUVVFcTMu3T09vRzOE/view?usp=drive_link",
+        "https://drive.google.com/file/d/1ndQEiPwiyvYwLHSYfOmeRtcpA2nGnThx/view?usp=drive_link",
+        "https://drive.google.com/file/d/1r_AuftVcKCdUuZMPuZrlD086gXcox7yx/view?usp=drive_link",
+        "https://drive.google.com/file/d/1MeC9k5pAia7daHHzfTfr5B0o48mEF5Ys/view?usp=drive_link",
+        "https://drive.google.com/file/d/1yngIAk5N3lGAo7uGfa6EG09BKnJ42lH0/view?usp=drive_link",
+        "https://drive.google.com/file/d/1cP7cQXpyeD5na1t9yAsulYtQxsggryfp/view?usp=drive_link",
+        "https://drive.google.com/file/d/1xWQAFVF7ZD6sPXPNxhv5wjV8vJ_1yPiL/view?usp=drive_link",
+        "https://drive.google.com/file/d/1aELkO6XUdcaB7t32iCWwrNQ1zuQlrgEi/view?usp=drive_link",
+        "https://drive.google.com/file/d/15-TC_Mas7kBVP4ymtbtU-UmcrgRBf8ME/view?usp=drive_link",
+        "https://drive.google.com/file/d/1R6LsjYtDnaM8hGMQQpSRUeOT8tP4OIXJ/view?usp=drive_link",
+        "https://drive.google.com/file/d/19ApdF5EzSqOss7lJc6cbx95RI1t7q46L/view?usp=drive_link",
+        "https://drive.google.com/file/d/1uSsnzZHHZaIAmpnWvAVdpUEOUiW6VbIc/view?usp=drive_link",
+        "https://drive.google.com/file/d/1XSQlw-SGzLM7AgTfyxYmItzMyjO6pInX/view?usp=drive_link",
+        "https://drive.google.com/file/d/12W0YWtPqkyxG0RU8GgY7HNQ3jPEOMgF8/view?usp=drive_link",
+        "https://drive.google.com/file/d/1hcOCdN2TMDgMXxBYuchajN_iJiwnhQhL/view?usp=drive_link",
+        "https://drive.google.com/file/d/1AVjYR9_Qjk3KhJglYUwOjo3BFyJuOzt5/view?usp=drive_link",
+        "https://drive.google.com/file/d/1G7PTdSmEJFdY13C25N3r1l38Q12jmQ_6/view?usp=drive_link",
+        "https://drive.google.com/file/d/1sfW-kO9KBBLvFX2dnLBO4Fn_at3evN1e/view?usp=drive_link",
+        "https://drive.google.com/file/d/1qodb1VxeagM0ZwNq8nToljcgxXENRVru/view?usp=drive_link"
+      ],
+      desc: "Desenvolvimento de identidades visuais únicas, logótipos memoráveis e manuais de marca.",
+      driveFolder: "https://drive.google.com/drive/folders/1VCSR3ceB9oQJenTuqODZgUtasHxgEh1e?usp=drive_link",
+      autoPlay: true
+    }
+  ];
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="min-h-screen bg-navy pt-32 pb-24"
+    >
+      <div className="container mx-auto px-6">
+        <button 
+          onClick={onBack}
+          className="flex items-center gap-2 text-green font-mono mb-12 hover:translate-x-[-4px] transition-transform"
+        >
+          <ArrowLeft size={18} /> Voltar ao Portfólio Principal
+        </button>
+
+        <h1 className="text-4xl md:text-6xl text-slate-lightest mb-4">Portfólio de Design Gráfico</h1>
+        <p className="text-slate text-lg max-w-2xl mb-16">
+          Uma coleção de trabalhos criativos focados em comunicação visual, 
+          identidade de marca e materiais promocionais.
+        </p>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {designProjects.map((project, i) => (
+            <ProjectCard key={i} project={project} index={i} />
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const Footer = () => {
   return (
     <footer className="py-12 border-t border-navy-lightest">
@@ -645,17 +804,25 @@ const WhatsAppFloating = () => {
 // --- Main App ---
 
 export default function PortfolioApp() {
+  const [view, setView] = useState<"home" | "design">("home");
+
   return (
     <div className="selection:bg-green/30 selection:text-green">
       <Navbar />
       <main>
-        <Hero />
-        <About />
-        <Experience />
-        <ProfessionalTraining />
-        <Services />
-        <Portfolio />
-        <Contact />
+        {view === "home" ? (
+          <>
+            <Hero />
+            <About />
+            <Experience />
+            <ProfessionalTraining />
+            <Services />
+            <Portfolio onDesignClick={() => setView("design")} />
+            <Contact />
+          </>
+        ) : (
+          <GraphicDesignPage onBack={() => setView("home")} />
+        )}
       </main>
       <Footer />
       <WhatsAppFloating />
