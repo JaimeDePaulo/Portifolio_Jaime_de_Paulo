@@ -855,6 +855,31 @@ const WhatsAppFloating = () => {
 export default function PortfolioApp() {
   const [view, setView] = useState<"home" | "design">("home");
 
+  useEffect(() => {
+    // Track visit
+    const trackVisit = async () => {
+      try {
+        await fetch("/api/visit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userAgent: navigator.userAgent,
+            language: navigator.language,
+            referrer: document.referrer,
+          }),
+        });
+      } catch (error) {
+        console.error("Failed to track visit:", error);
+      }
+    };
+
+    // Only track once per session to avoid noise
+    if (!sessionStorage.getItem("visited")) {
+      trackVisit();
+      sessionStorage.setItem("visited", "true");
+    }
+  }, []);
+
   return (
     <div className="selection:bg-green/30 selection:text-green">
       <Navbar />
