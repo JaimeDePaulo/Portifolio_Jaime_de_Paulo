@@ -664,7 +664,7 @@ const Contact = () => {
           <div className="glass-card flex flex-col items-center gap-3">
             <MapPin className="text-green" />
             <h4 className="text-slate-lightest">Localização</h4>
-            <p className="text-sm">Luanda, Angola</p>
+            <p className="text-sm">Huíla-Lubango, Angola</p>
           </div>
         </div>
 
