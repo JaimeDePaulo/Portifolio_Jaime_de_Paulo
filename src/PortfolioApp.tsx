@@ -25,7 +25,11 @@ import {
   Calendar,
   Briefcase,
   GraduationCap,
-  Award
+  Award,
+  Sun,
+  Moon,
+  Menu,
+  X
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
@@ -41,8 +45,44 @@ const getDriveImageUrl = (url: string) => {
   return url;
 };
 
-const Navbar = () => {
+const ThemeToggle = ({ 
+  theme, 
+  onToggle 
+}: { 
+  theme: "dark" | "light"; 
+  onToggle: () => void; 
+}) => {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-label={theme === "dark" ? "Mudar para modo Claro" : "Mudar para modo Escuro"}
+      title={theme === "dark" ? "Mudar para Modo Claro" : "Mudar para Modo Escuro"}
+      className="relative flex items-center gap-2 px-3 py-1.5 rounded-full border border-navy-lightest bg-navy-light hover:border-green/50 text-slate-light hover:text-green transition-all duration-300 shadow-sm cursor-pointer group select-none"
+    >
+      <span className="relative flex items-center justify-center w-5 h-5">
+        {theme === "dark" ? (
+          <Sun className="w-4 h-4 text-amber-300 group-hover:rotate-45 transition-transform duration-300" />
+        ) : (
+          <Moon className="w-4 h-4 text-emerald-600 group-hover:-rotate-12 transition-transform duration-300" />
+        )}
+      </span>
+      <span className="font-mono text-xs font-semibold tracking-wide hidden sm:inline-block">
+        {theme === "dark" ? "Light" : "Dark"}
+      </span>
+    </button>
+  );
+};
+
+const Navbar = ({ 
+  theme, 
+  onToggleTheme 
+}: { 
+  theme: "dark" | "light"; 
+  onToggleTheme: () => void; 
+}) => {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -60,42 +100,78 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-navy/90 backdrop-blur-md py-4 shadow-xl" : "bg-transparent py-6"}`}>
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-navy/90 backdrop-blur-md py-4 shadow-xl border-b border-navy-lightest/40" : "bg-transparent py-6"}`}>
       <div className="container mx-auto px-6 flex justify-between items-center">
-        <motion.div 
+        <motion.a 
+          href="#"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="text-green font-display font-bold text-2xl tracking-tighter"
+          className="text-green font-display font-bold text-2xl tracking-tighter cursor-pointer"
         >
           JP<span className="text-slate-lightest">.tech</span>
-        </motion.div>
+        </motion.a>
         
-        <div className="hidden md:flex items-center gap-8">
-          {navItems.map((item, i) => (
+        <div className="flex items-center gap-3 md:gap-8">
+          <div className="hidden md:flex items-center gap-8">
+            {navItems.map((item, i) => (
+              <motion.a
+                key={item.name}
+                href={item.href}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="nav-link"
+              >
+                <span className="text-green mr-1">0${i + 1}.</span> {item.name}
+              </motion.a>
+            ))}
             <motion.a
-              key={item.name}
-              href={item.href}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="nav-link"
+              href="#contact"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 }}
+              className="btn-primary"
             >
-              <span className="text-green mr-1">0{i + 1}.</span> {item.name}
+              Currículo
             </motion.a>
-          ))}
-          <motion.a
-            href="#contact"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
-            className="btn-primary"
-          >
-            Currículo
-          </motion.a>
-        </div>
+          </div>
 
-        {/* Mobile menu button could go here, but for now keeping it simple */}
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 text-slate-light hover:text-green rounded-lg border border-navy-lightest bg-navy-light/60 transition-colors"
+            aria-label="Abrir Menu"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
+
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-navy-light/95 backdrop-blur-lg border-b border-navy-lightest px-6 py-6 shadow-2xl space-y-4">
+          <div className="flex flex-col gap-4 font-mono text-sm">
+            {navItems.map((item, i) => (
+              <a
+                key={item.name}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-slate-light hover:text-green py-1.5 transition-colors flex items-center"
+              >
+                <span className="text-green mr-2">0${i + 1}.</span> {item.name}
+              </a>
+            ))}
+            <a
+              href="#contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="btn-primary text-center mt-2"
+            >
+              Currículo
+            </a>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
@@ -842,7 +918,7 @@ const WhatsAppFloating = () => {
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay: 1, type: "spring" }}
       whileHover={{ scale: 1.1 }}
-      className="fixed bottom-8 right-8 z-50 bg-green text-navy p-4 rounded-full shadow-2xl hover:shadow-green/20 transition-all"
+      className="fixed bottom-8 right-8 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-all flex items-center justify-center cursor-pointer"
       title="Fale comigo no WhatsApp"
     >
       <MessageCircle size={28} />
@@ -854,6 +930,30 @@ const WhatsAppFloating = () => {
 
 export default function PortfolioApp() {
   const [view, setView] = useState<"home" | "design">("home");
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("portfolio_theme");
+      if (saved === "light" || saved === "dark") return saved;
+      return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    }
+    return "dark";
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "light") {
+      root.classList.add("light");
+      root.classList.remove("dark");
+    } else {
+      root.classList.add("dark");
+      root.classList.remove("light");
+    }
+    localStorage.setItem("portfolio_theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === "dark" ? "light" : "dark"));
+  };
 
   useEffect(() => {
     // Track visit
@@ -881,8 +981,8 @@ export default function PortfolioApp() {
   }, []);
 
   return (
-    <div className="selection:bg-green/30 selection:text-green">
-      <Navbar />
+    <div className="selection:bg-green/30 selection:text-green min-h-screen bg-navy text-slate transition-colors duration-300">
+      <Navbar theme={theme} onToggleTheme={toggleTheme} />
       <main>
         {view === "home" ? (
           <>
